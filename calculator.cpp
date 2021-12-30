@@ -17,20 +17,13 @@ int main()
 	printf("%.5f", calcuator(input));
 	return 0;
 }*/
-
+int error_flag = 0;
 void read_line(FILE* fp, char* input, int len)
 {
 	char c;
 	int i = 0;
 	while ((c = fgetc(fp)) != '\n')
-	{
-		/* 최대 글자수 이상이면 에러 처리 */
-		if (i == len - 1)
-		{
-			printf("최대 길이는 %d까지입니다.\n", len-1);
-			exit(1);
-		}
-		
+	{		
 		/* 공백은 다 없애기 */
 		if (!isspace(abs(c)))
 			input[i++] = c;
@@ -46,7 +39,7 @@ typedef struct {
 /* 최종 계산값 도출 */
 /* parameter : 계산할 문자열 */
 /* return : 정상 == 계산결과, 비정상 == 프로그램 종료*/
-float calcuator(char* str)
+float calculator(char* str)
 {
 	float result[10] = { 0 };  // 숫자 저장 스택
 	int r = 0;  // result count
@@ -141,13 +134,21 @@ float calcuator(char* str)
 	/* 남은 연산자 모두 계산 */
 	while (op != 0)
 	{
-        if(oper[op-1].i == 4) error("연산자가 잘못입력되어있음");
+        if(oper[op-1].i == 4) 
+		{
+			error("연산자가 잘못입력되어있음");
+			error_flag = 1;
+		}
         float c= calc(result, &r, oper[op-- - 1].a);
     }
     	/* result에는 최종 값 하나만 */
 	if (r == 1)
 		return result[r - 1];
-	else error("계산이 비정상 종료되었습니다. "); 
+	else 
+	{
+		error("계산이 비정상 종료되었습니다. "); 
+		error_flag = 1;
+	}
 	return 0;	
 }
 
@@ -159,8 +160,10 @@ int operator_checker(char* str, int n, float* minus, int* status,float* result, 
 	/* 첫 문자가 +, -, ( 가 아니라면 에러처리 */
 	if (n == 0 && (str[n] == '*' || str[n] == '/' || 
 							str[n] == '^' || str[n] == ')'))
+	{
 		error("첫 문자가 잘못되었습니다.");
-
+		error_flag = 1;
+	}
 	/* 해당 문자열이 숫자라면 0값 리턴 */
 	if (str[n] >= '0' && str[n] <= '9')
 	{
@@ -195,8 +198,10 @@ int operator_checker(char* str, int n, float* minus, int* status,float* result, 
 			/* 괄호나 '-'가 아닌데 앞이 기호라면 기호 중복이므로 에러 처리 */
 			else if (n > 0 && str[n] != '-' && str[n] != '(' &&
 						str[n] != ')' && pre_str > 0 && pre_str < 5)
+			{
 				error("기호가 중복으로 입력되었습니다.");
-
+				error_flag = 1;
+			}
 			/* 음수기호가 아닌 그냥 연산자일 경우 */
 			pre_str = operator_order[w];
 			return operator_order[w];
@@ -204,14 +209,18 @@ int operator_checker(char* str, int n, float* minus, int* status,float* result, 
 	
 	/* 숫자, 연산자, 괄호 외 문자가 입력돼있으면 프로그램 종료 */
 	error("수식에 잘못된 문자가 포함되었습니다.");
-	return 0;  // 여기선 굳이 필요없는데 안해주면 비쥬얼 스튜디오에서 계속 warning을 띄움..
+	error_flag = 1;
+	return 0;  
 }
 
 int calc(float* result, int* r, char oper)
 {
 	/* 연산자가 있는데 result에 값이 하나라면 비정상 처리 */
 	if (*r < 2)
-		{error("연산자가 잘못 입력되었습니다.");}
+		{
+			error("연산자가 잘못 입력되었습니다.");
+			error_flag = 1;
+		}
 
 	else if (oper == '+')
 	{  
@@ -247,5 +256,4 @@ int calc(float* result, int* r, char oper)
 void error(char* str)
 {
 	printf("%s\n", str);
-	exit(1);
 }

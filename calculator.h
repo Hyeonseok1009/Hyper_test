@@ -10,6 +10,6 @@ void read_line(FILE* fp, char* input, int len);
 int operator_checker(char* str, int n, float* minus, int* status,float* result, int* r);
 int calc(float* result, int* r, char oper);
 void error(char* str);
-float calcuator(char* str);
+float calculator(char* str);
 
 #endif

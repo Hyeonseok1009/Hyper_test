@@ -17,7 +17,7 @@
 int main()
 {
     int client;
-    int portNum = 1500; // NOTE that the port number is same for both client and server
+    int portNum = 1500; 
     bool isExit = false;
     int bufsize = 1024;
     char buffer[bufsize];
@@ -33,25 +33,26 @@ int main()
         exit(1);
     }
 
-    printf("\n=> Socket client has been created...\n");
+    printf("\n[Socket client has been created...]\n");
 
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(portNum);
 
     if (connect(client,(struct sockaddr *)&server_addr, sizeof(server_addr)) == 0)
-        printf("=> Connection to the server port number: %d ",portNum);
+        printf("[Connection to the server port number: %d] \n",portNum);
 
-    printf("=> Awaiting confirmation from the server...\n"); //line 40
+    printf("[Awaiting confirmation from the server...]\n");
     recv(client, buffer, bufsize, 0);
-    printf("=> Connection confirmed, you are good to go...");
+    printf("[Connection confirmed]\n");
 
-    printf("\n\n=> Enter # to end the connection\n");
+    printf("\nEnter # to end the connection\n");
 
     do {
         printf("Client: ");
         read_line(stdin, buffer, bufsize);
         send(client, buffer, bufsize, 0);
-        if (*buffer == '#') {
+        if (*buffer == '#') 
+        {
             send(client, buffer, bufsize, 0);
             isExit = true;
             continue;
@@ -69,7 +70,7 @@ int main()
 
     } while (!isExit);
 
-    printf("\n=> Connection terminated.\nGoodbye...\n");
+    printf("\nConnection terminated.\n");
     close(client);
     
     return 0;
