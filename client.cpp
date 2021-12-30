@@ -46,10 +46,24 @@ int main()
     printf("[Connection confirmed]\n");
 
     printf("\nEnter # to end the connection\n");
-
+    FILE* test = fopen("test.txt","r");
+    char IsAuto = 'N';
+    do { 
+        printf("\nCalculate with test.txt?[Y/N] ");
+        scanf("%c",&IsAuto);
+    }while(!(IsAuto == 'Y'||IsAuto == 'y'||IsAuto == 'N'||IsAuto == 'n' ));
+    
     do {
+        //입력버퍼 비우기
+        fflush(stdin);
+
         printf("Client: ");
-        read_line(stdin, buffer, bufsize);
+        if(IsAuto == 'Y'|| IsAuto =='y') 
+            read_line(test, buffer, bufsize);
+            printf("\n");
+        else 
+            read_line(stdin, buffer, bufsize);
+
         send(client, buffer, bufsize, 0);
         if (*buffer == '#') 
         {
