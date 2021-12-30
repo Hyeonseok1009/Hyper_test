@@ -1,18 +1,10 @@
-/*!
- * Simple chat program (client side).cpp - http://github.com/hassanyf
- * Version - 2.0.1
- *
- * Copyright (c) 2016 Hassan M. Yousuf
- */
-#include "./calculator.cpp"
+#include "rmblank.cpp"
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
-
-
 
 int main()
 {
@@ -45,7 +37,7 @@ int main()
     recv(client, buffer, bufsize, 0);
     printf("[Connection confirmed]\n");
 
-    printf("\nEnter # to end the connection\n");
+    
     FILE* test = fopen("test.txt","r");
     char IsAuto = 'N';
     do { 
@@ -53,19 +45,25 @@ int main()
         scanf("%c",&IsAuto);
     }while(!(IsAuto == 'Y'||IsAuto == 'y'||IsAuto == 'N'||IsAuto == 'n' ));
     
+    if(IsAuto=='n'|| IsAuto=='N')printf("\nEnter # to end the connection\n");
+
     do {
         //입력버퍼 비우기
         fflush(stdin);
 
         printf("Client: ");
+        // Test with File("test.txt")
         if(IsAuto == 'Y'|| IsAuto =='y') 
+        {
             read_line(test, buffer, bufsize);
-            printf("\n");
-        else 
+            printf("%s \n",buffer);
+        }
+        else
+        {
             read_line(stdin, buffer, bufsize);
-
+        }
         send(client, buffer, bufsize, 0);
-        if (*buffer == '#') 
+        if (buffer[0] == '#') 
         {
             send(client, buffer, bufsize, 0);
             isExit = true;
@@ -76,7 +74,7 @@ int main()
        
         recv(client, buffer, bufsize, 0);
         printf("%s \n",buffer);
-        if (*buffer == '#') {
+        if (buffer[0] == '#') {
             isExit = true;
             continue;
         }

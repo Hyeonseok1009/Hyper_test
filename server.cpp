@@ -1,4 +1,5 @@
-#include "./calculator.cpp"
+#include "calculator.cpp"
+#include "rmblank.cpp"
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -59,7 +60,7 @@ int main()
         printf("\nClient's Request: ");
         recv(server, buffer, bufsize, 0);
         printf("%s \n",buffer);
-        if (*buffer == '#') {
+        if (buffer[0] == '#') {
             send(server, buffer, bufsize, 0);
             isExit = true;
             printf("\n\n=> Connection terminated" );
@@ -81,13 +82,13 @@ int main()
             printf("\nClient's Request: ");
             recv(server, buffer, bufsize, 0);
             printf("%s \n",buffer);
-            if (*buffer == '#') {
+            if (buffer[0] == '#') {
                 isExit = true;
                 continue;
             }
         } while (!isExit);
 
-        printf("\nConnection terminated with");
+        printf("\nConnection terminated.\n");
         close(server);
         isExit = false;
         exit(1);

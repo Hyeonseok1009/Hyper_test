@@ -1,35 +1,14 @@
-#include "calculator.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <string.h>
 
-/*void read_line(FILE* fp, char* input, int len);
 int operator_checker(char* str, int n, float* minus, int* status,float* result, int* r);
 int calc(float* result, int* r, char oper);
 void error(char* str);
-float calcuator(char* str);
+float calculator(char* str);
 
-int main()
-{
-	char input[MAX];
-	int n;
-
-	printf("수식 입력 : ");
-	read_line(stdin, input, MAX);
-	
-	printf("%.5f", calcuator(input));
-	return 0;
-}*/
 int error_flag = 0;
-void read_line(FILE* fp, char* input, int len)
-{
-	char c;
-	int i = 0;
-	while ((c = fgetc(fp)) != '\n')
-	{		
-		/* 공백은 다 없애기 */
-		if (!isspace(abs(c)))
-			input[i++] = c;
-	}
-	input[i] = '\0';
-}
 
 typedef struct {
 	char a;  // 실제 연산기호 저장
@@ -49,7 +28,7 @@ float calculator(char* str)
 	float f_count = 10;  // 실수 자릿수 계산
 
 	int n = -1;  // str count
-	int c, status = 0;  // c : 연산자 우선순위, status = 숫자 시작과 끝 상태
+	int c,status = 0; // c : 연산자 우선순위, status = 숫자 시작과 끝 상태; 
     int flag = 0;
 	while(str[++n] != '\0')
 	{
@@ -87,7 +66,7 @@ float calculator(char* str)
 				{   
 					r++;
 					status = 1;  // 다시 숫자 저장될 때까지는 r++ 안되게 1로 변경
-					f_count = 10;  // 숫자 저장이 끝마녀 기본값 셋팅 
+					f_count = 10;  
 				}
 			}
 			/* 첫 연산자일 경우 무조건 저장 */
@@ -143,9 +122,12 @@ float calculator(char* str)
     }
     	/* result에는 최종 값 하나만 */
 	if (r == 1)
-		return result[r - 1];
-	else 
 	{
+		
+		return result[r - 1];
+	}
+	else 
+	{printf("%d %d",result[0], result[1]);
 		error("계산이 비정상 종료되었습니다. "); 
 		error_flag = 1;
 	}
@@ -180,6 +162,7 @@ int operator_checker(char* str, int n, float* minus, int* status,float* result, 
 
 	/* 연산기호라면 연산자 우선순위 번호 리턴 */
 	for (int w = 0; w < 7; ++w)	
+	{
 		if (str[n] == operators[w])
 		{
 			/* 연산기호가 아니라 음수기호일 경우 */
@@ -206,7 +189,7 @@ int operator_checker(char* str, int n, float* minus, int* status,float* result, 
 			pre_str = operator_order[w];
 			return operator_order[w];
 		}
-	
+	}
 	/* 숫자, 연산자, 괄호 외 문자가 입력돼있으면 프로그램 종료 */
 	error("수식에 잘못된 문자가 포함되었습니다.");
 	error_flag = 1;
@@ -217,10 +200,10 @@ int calc(float* result, int* r, char oper)
 {
 	/* 연산자가 있는데 result에 값이 하나라면 비정상 처리 */
 	if (*r < 2)
-		{
+	{
 			error("연산자가 잘못 입력되었습니다.");
 			error_flag = 1;
-		}
+	}
 
 	else if (oper == '+')
 	{  
